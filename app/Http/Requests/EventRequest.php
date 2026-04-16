@@ -25,7 +25,8 @@ class EventRequest extends FormRequest
         return [
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'nullable|in:not done,done,cancelled'
+            'status' => 'nullable|in:not done,done,cancelled',
+            'event_date' => 'nullable|date',
         ];
     }
 }

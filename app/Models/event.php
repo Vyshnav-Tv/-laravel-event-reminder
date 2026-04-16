@@ -11,6 +11,7 @@ class event extends Model
         'description',
         'status',
         'user_id',
+        'event_date',
     ];
 
 }

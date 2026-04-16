@@ -40,4 +40,22 @@ class EventReminderController extends Controller
     {
         return $this->eventReminderService->update_event($request, $id);
     }
+
+    public function delete_event($id){
+        return $this->eventReminderService->delete_event($id);
+    }
+
+    public function update_event_status( $id){
+        return $this->eventReminderService->update_event_status($id);
+    }
+
+    public function update_reminder_status($id)
+    {
+        return $this->eventReminderService->update_reminder_status($id);
+    }
+
+    public function get_events(){
+        return $this->eventReminderService->get_events();
+    }
+
 }
