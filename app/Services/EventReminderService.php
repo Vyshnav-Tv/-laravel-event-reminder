@@ -54,7 +54,18 @@ class EventReminderService
     //get user events
     public function getUser_events()
     {
-        $events = event::where('user_id', Auth::id())->paginate(10);;
+        //$events = event::where('user_id', Auth::id())->paginate(10);
+
+        $query= event::where('user_id', Auth::id());
+
+        if($search=request('search')){
+            $query->where(function($q) use ($search){
+                $q->where('title','like',"%$search%")
+                ->orWhere('description','like',"%$search%");
+            });
+        }
+ 
+       $events=$query->paginate(10);
 
         return response()->json([
             'success' => true,
@@ -191,6 +202,13 @@ class EventReminderService
 
         $query = event::query();
 
+        if ($search = request('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%");
+            });
+        }
+
         if ($status = request('status')) {
             $query->where('status', $status);
         }
@@ -211,12 +229,14 @@ class EventReminderService
         }
 
         $data=$query->get();
-        
+
         return response()->json([
             'success' => true,
             'data' => EventResource::collection($data)
         ]);
     }
+
+
 
   
 
