@@ -39,6 +39,16 @@ class EventReminderService
             'reminder_time' => 'required|date',
             'status' => 'nullable'
         ]);
+
+        $event = event::where('event_id', $request->event_id)->where('user_id', Auth::id())->first();
+
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event not found or does not belong to the user'
+            ]);
+        }
+
         reminder::create([
             'event_id' => $request->event_id,
             'reminder_time' => $request->reminder_time,
@@ -122,7 +132,7 @@ class EventReminderService
             return response()->json([
                 'success' => false,
                 'message' => 'Event cannot be deleted because reminders exist'
-            ], 400);
+            ]);
         }
 
         DB::table('events')->where('id', $id)->delete();
