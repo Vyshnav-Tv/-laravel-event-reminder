@@ -66,16 +66,16 @@ class EventReminderService
     {
         //$events = event::where('user_id', Auth::id())->paginate(10);
 
-        $query= event::where('user_id', Auth::id());
+        $query = event::where('user_id', Auth::id());
 
-        if($search=request('search')){
-            $query->where(function($q) use ($search){
-                $q->where('title','like',"%$search%")
-                ->orWhere('description','like',"%$search%");
+        if ($search = request('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%");
             });
         }
- 
-       $events=$query->paginate(10);
+
+        $events = $query->paginate(10);
 
         return response()->json([
             'success' => true,
@@ -174,8 +174,8 @@ class EventReminderService
         ]);
     }
 
-     //update reminder status
-     public function update_reminder_status($id)
+    //update reminder status
+    public function update_reminder_status($id)
     {
         $reminder = reminder::where('event_id', $id)->first();
         $current_status = $reminder->status;
@@ -238,7 +238,7 @@ class EventReminderService
             }
         }
 
-        $data=$query->get();
+        $data = $query->get();
 
         return response()->json([
             'success' => true,
@@ -248,7 +248,41 @@ class EventReminderService
 
 
 
-  
+    //create events and reminders together
+    public function create_event_reminder(Request $request)
+    {
 
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'description' => 'nullable|string',
+            'event_date' => 'required|date',
+            'status' => 'nullable|in:not done,done,cancelled',
+            'reminders' => 'nullable|array',
+            'reminders.*.reminder_time' => 'nullable|date',
+            'reminders.*.status' => 'nullable',
+        ]);
+
+        $event = event::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'event_date' => $validated['event_date'],
+            'status' => $validated['status'] ?? 'not done',
+            'user_id' => Auth::id()
+        ]);
+
+        if (isset($validated['reminders'])) {
+            foreach ($validated['reminders'] as $reminder) {
+                reminder::create([
+                    'event_id' => $event->id,
+                    'reminder_time' => $reminder['reminder_time'],
+                    'status' => $reminder['status'] ?? 'not_done'
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Event and reminders created successfully'
+            ]);
+        }
+    }
 }
-?>
