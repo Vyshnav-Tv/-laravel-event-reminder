@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/reminders/{id}/status', [EventReminderController::class, 'update_reminder_status']);
     Route::get('/all-events', [EventReminderController::class, 'get_events']); 
     Route::post('/event-reminder', [EventReminderController::class, 'create_event_reminder']);
+    Route::post('/logout', [EventReminderController::class, 'Logout']);
 });
 
 

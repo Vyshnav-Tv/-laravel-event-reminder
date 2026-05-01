@@ -249,40 +249,49 @@ class EventReminderService
 
 
     //create events and reminders together
-    public function create_event_reminder(Request $request)
+    // public function create_event_reminder(Request $request)
+    // {
+
+    //     $validated = $request->validate([
+    //         'title' => 'required|string',
+    //         'description' => 'nullable|string',
+    //         'event_date' => 'required|date',
+    //         'status' => 'nullable|in:not done,done,cancelled',
+    //         'reminders' => 'nullable|array',
+    //         'reminders.*.reminder_time' => 'nullable|date',
+    //         'reminders.*.status' => 'nullable',
+    //     ]);
+
+    //     $event = event::create([
+    //         'title' => $validated['title'],
+    //         'description' => $validated['description'] ?? null,
+    //         'event_date' => $validated['event_date'],
+    //         'status' => $validated['status'] ?? 'not done',
+    //         'user_id' => Auth::id()
+    //     ]);
+
+    //     if (isset($validated['reminders'])) {
+    //         foreach ($validated['reminders'] as $reminder) {
+    //             reminder::create([
+    //                 'event_id' => $event->id,
+    //                 'reminder_time' => $reminder['reminder_time'],
+    //                 'status' => $reminder['status'] ?? 'not_done'
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Event and reminders created successfully'
+    //         ]);
+    //     }
+    // }
+
+
+    public function Logut(Request $request)
     {
 
-        $validated = $request->validate([
-            'title' => 'required|string',
-            'description' => 'nullable|string',
-            'event_date' => 'required|date',
-            'status' => 'nullable|in:not done,done,cancelled',
-            'reminders' => 'nullable|array',
-            'reminders.*.reminder_time' => 'nullable|date',
-            'reminders.*.status' => 'nullable',
-        ]);
+        $request->user()->currentAccessToken()->delete();
 
-        $event = event::create([
-            'title' => $validated['title'],
-            'description' => $validated['description'] ?? null,
-            'event_date' => $validated['event_date'],
-            'status' => $validated['status'] ?? 'not done',
-            'user_id' => Auth::id()
-        ]);
-
-        if (isset($validated['reminders'])) {
-            foreach ($validated['reminders'] as $reminder) {
-                reminder::create([
-                    'event_id' => $event->id,
-                    'reminder_time' => $reminder['reminder_time'],
-                    'status' => $reminder['status'] ?? 'not_done'
-                ]);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Event and reminders created successfully'
-            ]);
-        }
+        return response()->json(['message' => 'Logged out successfully']);
     }
 }

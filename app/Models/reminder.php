@@ -11,4 +11,8 @@ class reminder extends Model
         "reminder_time",
         "status"
     ];
+
+    public function event(){
+        return $this->belongsTo(event::class);
+    }
 }

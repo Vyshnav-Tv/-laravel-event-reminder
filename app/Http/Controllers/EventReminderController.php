@@ -58,7 +58,12 @@ class EventReminderController extends Controller
         return $this->eventReminderService->get_events();
     }
 
-    public function create_event_reminder(Request $request){
-        return $this->eventReminderService->create_event_reminder($request);
+    // public function create_event_reminder(Request $request){
+    //     return $this->eventReminderService->create_event_reminder($request);
+    // }
+
+    public function Logout(Request $request)
+    {
+        return $this->eventReminderService->Logut($request);
     }
 }

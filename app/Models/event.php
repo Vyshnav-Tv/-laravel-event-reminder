@@ -14,4 +14,13 @@ class event extends Model
         'event_date',
     ];
 
+    public function reminder(){
+        return $this->hasMany(reminder::class);
+    }
+
+    public function user()
+    {
+        return $this->belongTo(User::class);
+    }
+
 }
